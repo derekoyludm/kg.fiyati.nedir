@@ -230,8 +230,6 @@ KG - LT Fiyatını Hesapla
 
 <script>
 
-let aktifInput = null;
-
 document.querySelectorAll("input").forEach(function(input){
 
     input.addEventListener("focus", function(){
@@ -285,7 +283,7 @@ function kgFiyatHesapla(){
 
     if(gramaj <= 0){
 
-        alert("Lütfen geçerli bir KG değeri giriniz.");
+        alert("Lütfen geçerli bir KG - LT değeri giriniz.");
         return;
 
     }
@@ -306,7 +304,7 @@ function kgFiyatHesapla(){
         fiyat.toLocaleString("tr-TR",fmt2) + " TL";
 
     document.getElementById("resGramaj").innerText =
-        gramaj.toLocaleString("tr-TR",fmt3) + " KG";
+        gramaj.toLocaleString("tr-TR",fmt3) + " KG - LT";
 
     document.getElementById("resKg").innerText =
         kgFiyati.toLocaleString("tr-TR",fmt2) + " TL";
