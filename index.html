@@ -50,12 +50,12 @@ label{
     width:100%;
 }
 
-.field-container input[type="text"]{
+.field-container input{
     width:100%;
     min-width:0;
 }
 
-input[type="text"]{
+input{
     flex:1;
     height:46px;
     border:2px solid #bfc6cd;
@@ -65,9 +65,11 @@ input[type="text"]{
     font-size:16px;
     text-align:center;
     transition:0.2s;
+    -webkit-appearance:none;
+    appearance:none;
 }
 
-input[type="text"]:focus{
+input:focus{
     outline:none;
     border-color:#57c785;
 }
@@ -90,6 +92,7 @@ input[type="text"]:focus{
     cursor:pointer;
     user-select:none;
     flex-shrink:0;
+    touch-action:manipulation;
 }
 
 .clear-btn:hover{
@@ -153,8 +156,20 @@ button:hover{
 <label>Ürünün Fiyatı (TL)</label>
 
 <div class="field-container">
-<input type="text" id="fiyat">
-<div class="clear-btn" onclick="temizleKutu('fiyat')">×</div>
+<input 
+type="text"
+id="fiyat"
+inputmode="decimal"
+autocomplete="off"
+autocorrect="off"
+autocapitalize="off"
+spellcheck="false"
+>
+<div 
+class="clear-btn"
+ontouchstart="temizleKutu(event,'fiyat')"
+onclick="temizleKutu(event,'fiyat')"
+>×</div>
 </div>
 
 </div>
@@ -164,8 +179,22 @@ button:hover{
 <label>Ürünün Gramajı (KG)</label>
 
 <div class="field-container">
-<input type="text" id="gramaj" class="yellow-bg" placeholder="Örn: 0,051">
-<div class="clear-btn" onclick="temizleKutu('gramaj')">×</div>
+<input 
+type="text"
+id="gramaj"
+class="yellow-bg"
+placeholder="Örn: 0,051"
+inputmode="decimal"
+autocomplete="off"
+autocorrect="off"
+autocapitalize="off"
+spellcheck="false"
+>
+<div 
+class="clear-btn"
+ontouchstart="temizleKutu(event,'gramaj')"
+onclick="temizleKutu(event,'gramaj')"
+>×</div>
 </div>
 
 </div>
@@ -201,9 +230,29 @@ KG Fiyatını Hesapla
 
 <script>
 
-function temizleKutu(id){
+let aktifInput = null;
 
-    document.getElementById(id).value = "";
+document.querySelectorAll("input").forEach(function(input){
+
+    input.addEventListener("focus", function(){
+        aktifInput = this;
+    });
+
+});
+
+function temizleKutu(event,id){
+
+    event.preventDefault();
+
+    let input = document.getElementById(id);
+
+    input.value = "";
+
+    setTimeout(function(){
+
+        input.focus();
+
+    },10);
 
 }
 
