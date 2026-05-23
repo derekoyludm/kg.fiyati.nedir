@@ -10,6 +10,7 @@
 
 *{
     box-sizing:border-box;
+    -webkit-tap-highlight-color:transparent;
 }
 
 body{
@@ -24,7 +25,7 @@ body{
 .container{
     width:100%;
     max-width:470px;
-    background:#ffffff;
+    background:#fff;
     border-radius:18px;
     padding:26px;
     box-shadow:0 6px 18px rgba(0,0,0,0.08);
@@ -32,7 +33,6 @@ body{
 
 .input-group{
     margin-bottom:18px;
-    width:100%;
 }
 
 label{
@@ -47,35 +47,24 @@ label{
     display:flex;
     align-items:center;
     gap:8px;
-    width:100%;
-}
-
-.field-container input{
-    width:100%;
-    min-width:0;
 }
 
 input{
     flex:1;
     height:46px;
-    border:2px solid #bfc6cd;
+    border:1.5px solid #c9d2dc;
     border-radius:8px;
     background:#fff;
     padding:0 14px;
     font-size:16px;
     text-align:center;
-    transition:0.2s;
-    -webkit-appearance:none;
-    appearance:none;
+    transition:.15s;
 }
 
 input:focus{
     outline:none;
-    border-color:#57c785;
-}
-
-.yellow-bg{
-    background:#f7eb75 !important;
+    border-color:#8fd4ae;
+    box-shadow:0 0 0 4px rgba(143,212,174,0.35);
 }
 
 .clear-btn{
@@ -86,35 +75,56 @@ input:focus{
     display:flex;
     justify-content:center;
     align-items:center;
-    color:white;
+    color:#fff;
     font-size:22px;
     font-weight:bold;
     cursor:pointer;
-    user-select:none;
-    flex-shrink:0;
-    touch-action:manipulation;
 }
 
-.clear-btn:hover{
-    background:#2587ca;
+.button-row{
+    display:flex;
+    gap:10px;
+    margin-top:10px;
 }
 
 button{
     width:100%;
     height:50px;
-    border:none;
     border-radius:8px;
-    background:#2ecc71;
-    color:white;
+    border:1.5px solid #c9d2dc;
+    background:#fff;
     font-size:17px;
     font-weight:700;
     cursor:pointer;
-    margin-top:10px;
-    transition:0.2s;
+    transition:.15s;
+    color:#2c3e50;
+}
+
+/* ❌ default focus çerçevesi tamamen kapalı */
+button:focus{
+    outline:none;
+    box-shadow:none;
+}
+
+/* ✔ sadece klavye ile gelince yeşil stil */
+button:focus-visible{
+    outline:none;
+    border-color:#8fd4ae;
+    box-shadow:0 0 0 4px rgba(143,212,174,0.45);
 }
 
 button:hover{
-    background:#28b765;
+    background:#f6f8fa;
+}
+
+.reset-btn.active-reset{
+    border-color:#e74c3c;
+    box-shadow:0 0 0 4px rgba(231,76,60,0.35);
+}
+
+button.clicked-blue{
+    border-color:#8fd4ae !important;
+    box-shadow:0 0 0 4px rgba(143,212,174,0.45) !important;
 }
 
 .result{
@@ -123,12 +133,6 @@ button:hover{
     background:#ecfdf5;
     border-radius:10px;
     padding:18px;
-}
-
-.result p{
-    margin:10px 0;
-    color:#2c3e50;
-    font-size:15px;
 }
 
 .highlight{
@@ -152,76 +156,42 @@ button:hover{
 <div class="container">
 
 <div class="input-group">
-
-<label>Ürünün Fiyatı (TL)</label>
-
+<label>Fiyat</label>
 <div class="field-container">
-<input 
-type="text"
-id="fiyat"
-inputmode="decimal"
-autocomplete="off"
-autocorrect="off"
-autocapitalize="off"
-spellcheck="false"
->
-<div 
-class="clear-btn"
-ontouchstart="temizleKutu(event,'fiyat')"
-onclick="temizleKutu(event,'fiyat')"
->×</div>
+<input id="fiyat" type="text">
+<div class="clear-btn" onclick="temizle('fiyat')">×</div>
 </div>
-
 </div>
 
 <div class="input-group">
-
-<label>Ürünün Gramajı (KG - LT)</label>
-
+<label>Gramaj</label>
 <div class="field-container">
-<input 
-type="text"
-id="gramaj"
-class="yellow-bg"
-placeholder="Örn: 0,051"
-inputmode="decimal"
-autocomplete="off"
-autocorrect="off"
-autocapitalize="off"
-spellcheck="false"
->
-<div 
-class="clear-btn"
-ontouchstart="temizleKutu(event,'gramaj')"
-onclick="temizleKutu(event,'gramaj')"
->×</div>
+<input id="gramaj" type="text">
+<div class="clear-btn" onclick="temizle('gramaj')">×</div>
+</div>
 </div>
 
-</div>
+<div class="button-row">
 
-<button onclick="kgFiyatHesapla()">
-KG - LT Fiyatını Hesapla
+<button id="hesaplaBtn" onclick="hesapla()">
+Hesapla
 </button>
 
-<div class="result" id="sonucAlani">
+<button id="resetBtn" class="reset-btn" onclick="sifirla(event)">
+↺
+</button>
 
-<p>
-Ürün Fiyatı
-<span class="highlight" id="resFiyat">0,00 TL</span>
-</p>
+</div>
 
-<p>
-Ürün Gramajı
-<span class="highlight" id="resGramaj">0,000 KG - LT</span>
-</p>
+<div class="result" id="sonuc">
+<p>Fiyat <span class="highlight" id="resFiyat"></span></p>
+<p>Gramaj <span class="highlight" id="resGramaj"></span></p>
 
 <div class="final-box">
-
 <p style="font-size:17px;font-weight:bold;color:#27ae60;">
-1 KG - LT Fiyatı
-<span class="highlight" id="resKg">0,00 TL</span>
+KG Fiyatı
+<span class="highlight" id="resKg"></span>
 </p>
-
 </div>
 
 </div>
@@ -230,103 +200,97 @@ KG - LT Fiyatını Hesapla
 
 <script>
 
-document.querySelectorAll("input").forEach(function(input){
+function sayi(id){
+    let v=document.getElementById(id).value.trim();
+    if(!v) return 0;
+    return parseFloat(v.replace(/\./g,"").replace(",",".")) || 0;
+}
 
-    input.addEventListener("focus", function(){
-        aktifInput = this;
+function sifirla(e){
+
+    e.preventDefault();
+
+    document.querySelectorAll("input").forEach(i=>i.value="");
+
+    document.getElementById("resetBtn")
+        .classList.add("active-reset");
+
+    document.getElementById("sonuc").style.display="none";
+    document.getElementById("hesaplaBtn").classList.remove("clicked-blue");
+}
+
+function resetKapat(){
+    document.getElementById("resetBtn")
+        .classList.remove("active-reset");
+}
+
+function hesapla(){
+
+    let fiyat=sayi("fiyat");
+    let gramaj=sayi("gramaj");
+
+    if(fiyat<=0 || gramaj<=0) return;
+
+    let kg=fiyat/gramaj;
+
+    document.getElementById("resFiyat").innerText=fiyat.toFixed(2)+" TL";
+    document.getElementById("resGramaj").innerText=gramaj.toFixed(3);
+    document.getElementById("resKg").innerText=kg.toFixed(2)+" TL";
+
+    document.getElementById("sonuc").style.display="block";
+
+    document.getElementById("hesaplaBtn")
+        .classList.add("clicked-blue");
+}
+
+/* INPUT DEĞİŞİNCE RESET */
+document.querySelectorAll("input").forEach(i=>{
+    i.addEventListener("input", ()=>{
+
+        resetKapat();
+
+        document.getElementById("hesaplaBtn")
+            .classList.remove("clicked-blue");
+
+        document.getElementById("sonuc").style.display="none";
     });
-
 });
 
-function temizleKutu(event,id){
-
-    event.preventDefault();
-
-    let input = document.getElementById(id);
-
-    input.value = "";
-
-    setTimeout(function(){
-
-        input.focus();
-
-    },10);
-
-}
-
-function sayiyaCevir(id){
-
-    let value = document.getElementById(id).value.trim();
-
-    if(value === ""){
-        return 0;
-    }
-
-    value = value.replace(/\./g,"").replace(",",".");
-
-    let sayi = parseFloat(value);
-
-    return isNaN(sayi) ? 0 : sayi;
-}
-
-function kgFiyatHesapla(){
-
-    let fiyat = sayiyaCevir("fiyat");
-    let gramaj = sayiyaCevir("gramaj");
-
-    if(fiyat <= 0){
-
-        alert("Lütfen geçerli bir fiyat giriniz.");
-        return;
-
-    }
-
-    if(gramaj <= 0){
-
-        alert("Lütfen geçerli bir KG - LT değeri giriniz.");
-        return;
-
-    }
-
-    let kgFiyati = fiyat / gramaj;
-
-    let fmt2 = {
-        minimumFractionDigits:2,
-        maximumFractionDigits:2
-    };
-
-    let fmt3 = {
-        minimumFractionDigits:3,
-        maximumFractionDigits:3
-    };
-
-    document.getElementById("resFiyat").innerText =
-        fiyat.toLocaleString("tr-TR",fmt2) + " TL";
-
-    document.getElementById("resGramaj").innerText =
-        gramaj.toLocaleString("tr-TR",fmt3) + " KG - LT";
-
-    document.getElementById("resKg").innerText =
-        kgFiyati.toLocaleString("tr-TR",fmt2) + " TL";
-
-    document.getElementById("sonucAlani").style.display = "block";
-
-}
-
-document.querySelectorAll("input").forEach(function(input){
-
-    input.addEventListener("keydown",function(e){
-
-        if(e.key === "Enter"){
-
+/* ENTER İLE GEÇİŞ */
+document.querySelectorAll("input").forEach((input, index, list) => {
+    input.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") {
             e.preventDefault();
-            kgFiyatHesapla();
 
+            let next = list[index + 1];
+
+            if (next) {
+                next.focus();
+                next.select();
+            } else {
+                document.getElementById("hesaplaBtn").focus();
+            }
         }
-
     });
-
 });
+
+/* CLEAR */
+function temizle(id){
+
+    document.getElementById(id).value="";
+
+    resetKapat();
+
+    document.getElementById("hesaplaBtn")
+        .classList.remove("clicked-blue");
+
+    document.getElementById("sonuc").style.display="none";
+
+    setTimeout(()=>{
+        document.getElementById(id).focus();
+        document.getElementById(id).select();
+    },10);
+}
 
 </script>
 
