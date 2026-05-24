@@ -278,9 +278,11 @@ function hesapla(){
     let fiyat=g("fiyat");
     let gramaj=g("gramaj");
 
-    if(fiyat<=0 || gramaj<=0) return;
-
-    let kg=fiyat/gramaj;
+    // Gramaj sıfır veya boş girildiyse sıfıra bölme hatası (Infinity) olmasın diye kg'yi 0 yapıyoruz
+    let kg = 0;
+    if (gramaj > 0) {
+        kg = fiyat / gramaj;
+    }
 
     document.getElementById("resFiyat").innerText=fiyat.toFixed(2)+" TL";
     document.getElementById("resGramaj").innerText=gramaj.toFixed(3);
