@@ -5,10 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, user-scalable=no">
 <title>KG - LT Fiyat Hesaplama</title>
 
-<!-- FAVICON -->
-<link rel="icon" type="image/png" sizes="512x512" href="tag-512.png">
-<link rel="apple-touch-icon" href="tag-512.png">
-
 <style>
 
 *{
@@ -31,12 +27,12 @@ body{
 /* 🟢 Kutunun genişlik dengesini hem PC hem mobil için koruyan alan */
 .container{
     width:100%;
-    max-width:440px; /* İlk uygulamadaki ideal PC genişliği */
+    max-width:440px; /* Birinci kodun ideal genişliği */
     background:#fff;
     border-radius:18px;
     padding:26px;
     box-shadow:0 6px 18px rgba(0,0,0,0.08);
-    margin: auto; /* Dış boşlukları otomatik dağıtarak ekstra ortalama sağlar */
+    margin: auto; 
 }
 
 .input-group{
@@ -72,6 +68,9 @@ button{
 
 input:focus {
     font-size: 16px !important;
+}
+
+input:focus {
     outline: none !important;
     -webkit-fullscreen-control-style: none;
     border-color: #8fd4ae !important;
@@ -210,7 +209,7 @@ button.clicked-blue{
 </div>
 
 <div class="input-group">
-<label>Gramaj (gr / ml)</label>
+<label>Gramaj</label>
 <div class="field-container">
 <input id="gramaj" type="text" inputmode="decimal">
 <div class="clear-btn" ontouchstart="temizle(event,'gramaj')" onclick="temizle(event,'gramaj')">×</div>
@@ -230,12 +229,14 @@ Hesapla
 </div>
 
 <div class="result" id="sonuc">
-<p>Ürün Fiyatı <span id="resFiyat" class="highlight"></span></p>
-<p>Ürün Gramajı <span id="resGramaj" class="highlight"></span></p>
+
+<p>Fiyat <span id="resFiyat" class="highlight"></span></p>
+<p>Gramaj <span id="resGramaj" class="highlight"></span></p>
 
 <div class="box">
-<p><b>KG / LT Fiyatı</b> <span id="resKg" class="highlight"></span></p>
+<p style="font-size:15px; font-weight:700; color:#27ae60;"><b>KG / LT Fiyatı</b> <span id="resKg" class="highlight" style="color:#27ae60;"></span></p>
 </div>
+
 </div>
 
 <div class="creator">
@@ -274,24 +275,18 @@ function hesapla(){
     let btn=document.getElementById("hesaplaBtn");
     btn.classList.add("clicked-blue");
 
-    let fiyat = g("fiyat");
-    let gramaj = g("gramaj");
+    let fiyat=g("fiyat");
+    let gramaj=g("gramaj");
 
-    if(fiyat <= 0 || gramaj <= 0) return;
+    if(fiyat<=0 || gramaj<=0) return;
 
-    // Gram girişi yapıldığında KG fiyatını bulmak için (Fiyat / Gramaj) * 1000 formülü uygulanır
-    let kg = (fiyat / gramaj) * 1000;
+    let kg=fiyat/gramaj;
 
-    document.getElementById("resFiyat").innerText = fiyat.toFixed(2) + " TL";
-    document.getElementById("resGramaj").innerText = gramaj.toFixed(0) + " gr/ml";
-    document.getElementById("resKg").innerText = kg.toFixed(2) + " TL";
+    document.getElementById("resFiyat").innerText=fiyat.toFixed(2)+" TL";
+    document.getElementById("resGramaj").innerText=gramaj.toFixed(3);
+    document.getElementById("resKg").innerText=kg.toFixed(2)+" TL";
 
     document.getElementById("sonuc").style.display="block";
-
-    /* Mobil klavyeyi kapatmak için odak temizleme */
-    document.querySelectorAll("input").forEach(i => {
-        i.blur();
-    });
 }
 
 function hesapGecersizYap(){
@@ -299,16 +294,20 @@ function hesapGecersizYap(){
     document.getElementById("hesaplaBtn").classList.remove("clicked-blue");
 }
 
-document.querySelectorAll("input").forEach(el=>{
+document.querySelectorAll("input")
+.forEach(el=>{
 
     el.addEventListener("input", ()=>{
         hesapGecersizYap();
-        document.querySelector(".reset-btn").classList.remove("active-reset");
+        document.querySelector(".reset-btn")
+            .classList.remove("active-reset");
     });
     
-    el.addEventListener("focus", () => {
-        setTimeout(() => { el.select(); }, 50);
-    });
+    if(el.tagName === "INPUT") {
+        el.addEventListener("focus", () => {
+            setTimeout(() => { el.select(); }, 50);
+        });
+    }
 
 });
 
@@ -324,7 +323,7 @@ alanlar.forEach((el,i)=>{
             if(next){
                 setTimeout(()=>{
                     next.focus();
-                    next.select();
+                    if(next.tagName==="INPUT") next.select();
                 },0);
             }else{
                 hesapla();
